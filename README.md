@@ -193,7 +193,7 @@ long:
 - an HTML delivery email that people can actually copy a 104-character key out of
 
 If you'd rather not spend the day, the complete kit is here:
-**<!-- TODO: paste your Gumroad product URL here before publishing -->**
+**[Offline License Kit for Chrome Extensions](https://7568880033463.gumroad.com/l/pyaegk)** — $29, one-time
 
 Everything in this repository is MIT licensed and stays that way. The kit is
 convenience, not a lock.
