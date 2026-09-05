@@ -1,0 +1,49 @@
+<!-- Minimal licence UI. The parts that matter are marked in options.js. -->
+<meta charset="utf-8">
+<title>Offline License Demo</title>
+<style>
+  body { font: 14px/1.6 system-ui, sans-serif; max-width: 560px; margin: 40px auto; padding: 0 20px; }
+  h1 { font-size: 18px; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 999px;
+           background: #eee; font-size: 12px; }
+  .badge.pro { background: #16a34a; color: #fff; }
+  .row { display: flex; gap: 8px; margin: 14px 0; }
+  input { flex: 1; padding: 9px 12px; border: 1px solid #ccc; border-radius: 8px; font: inherit; }
+  button { padding: 9px 16px; border: 1px solid #ccc; border-radius: 8px;
+           background: #fff; cursor: pointer; font: inherit; }
+  .msg { min-height: 20px; font-size: 13px; }
+  .msg.bad { color: #dc2626; }
+  .msg.good { color: #16a34a; }
+  .muted { color: #666; font-size: 13px; }
+</style>
+
+<h1>Offline License Demo <span id="plan" class="badge">—</span></h1>
+
+<div id="free">
+  <div class="row">
+    <input id="key" type="text" placeholder="Paste your license key — it activates on paste"
+           spellcheck="false" autocomplete="off">
+    <button id="activate">Activate</button>
+  </div>
+  <div id="msg" class="msg"></div>
+</div>
+
+<div id="pro" hidden>
+  <p class="msg good">✓ Pro is active.</p>
+  <button id="remove">Remove license</button>
+</div>
+
+<hr>
+
+<p><button id="try">Try the pro-only action</button></p>
+<div id="result" class="msg"></div>
+
+<p class="muted">
+  Verification runs entirely in this browser. This extension requests
+  <code>storage</code> and nothing else — check under
+  <code>chrome://extensions</code>.
+</p>
+
+<script src="license.js"></script>
+<script src="license-config.js"></script>
+<script src="options.js"></script>

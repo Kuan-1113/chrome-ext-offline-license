@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Offline License Demo",
+  "version": "1.0.0",
+  "description": "Minimal example of offline license verification. Note the permissions list below: storage, and nothing else.",
+  "permissions": ["storage"],
+  "background": { "service_worker": "background.js" },
+  "options_ui": { "page": "options.html", "open_in_tab": true },
+  "action": { "default_title": "Offline License Demo" }
+}

@@ -1,0 +1,58 @@
+<meta charset="utf-8">
+<title>license.js self-test</title>
+<pre id="o" style="font:13px/1.7 Consolas,monospace">running…</pre>
+<script src="_testdata.js"></script>
+<script src="../src/license.js"></script>
+<script>
+const mem = {};
+const storage = {
+  get:    (k) => Promise.resolve(k in mem ? { [k]: mem[k] } : {}),
+  set:    (o) => (Object.assign(mem, o), Promise.resolve()),
+  remove: (k) => (delete mem[k], Promise.resolve())
+};
+
+const L    = createLicense({ publicJwk: TESTDATA.jwk, prefix: 'app1:', storage });
+const good = TESTDATA.keys;
+// Flip a character at a given index. Never use the LAST character of the
+// signature: base64url's final char carries only 4 significant bits for a
+// 64-byte value, so changing it can decode to the identical bytes and the
+// signature still verifies. That is not a bug, but it does make a naive
+// tamper test pass when it should fail.
+const flipAt = (s, i) => s.slice(0, i) + (s[i] === 'A' ? 'B' : 'A') + s.slice(i + 1);
+const flipSig = (s) => flipAt(s, s.lastIndexOf('.') + 10);
+const flipPayload = (s) => flipAt(s, s.lastIndexOf('.') - 3);
+
+(async () => {
+  const t = [];
+  const check = async (name, fn, want) => t.push([name, (await fn()) === want]);
+
+  await check('valid key verifies',            () => L.verify(good[0]), true);
+  await check('whitespace/newlines tolerated', () => L.verify('  ' + good[1] + '\n\t'), true);
+  await check('tampered signature rejected',   () => L.verify(flipSig(good[2])), false);
+  await check('tampered payload rejected',     () => L.verify(flipPayload(good[2])), false);
+  await check('swapped sig from other key',    () => L.verify(good[0].split('.')[0] + '.' + good[1].split('.')[1]), false);
+  await check('wrong prefix rejected',         () => L.verify(good[0].replace('app1:', 'app2:')), false);
+  await check('garbage rejected',              () => L.verify('app1:xxxxxxxxxxxx.AAAA'), false);
+  await check('empty rejected',                () => L.verify(''), false);
+  await check('null rejected',                 () => L.verify(null), false);
+  await check('no dot rejected',               () => L.verify('app1:abcdefghijkl'), false);
+
+  await check('isPro false before activate',   () => L.isPro(), false);
+  await L.activate(good[0]);
+  await check('isPro true after activate',     () => L.isPro(), true);
+
+  mem.licenseKey = 'app1:tampered0000.AAAA';
+  await check('tampered storage revokes pro',  () => L.isPro(), false);
+
+  await L.activate(good[0]);
+  await L.deactivate();
+  await check('isPro false after deactivate',  () => L.isPro(), false);
+
+  const bad = t.filter((x) => !x[1]).length;
+  document.getElementById('o').textContent =
+    t.map(([n, p]) => (p ? 'PASS  ' : 'FAIL  ') + n).join('\n') +
+    '\n\n' + (bad === 0 ? 'ALL ' + t.length + ' PASS' : bad + ' FAILED');
+})().catch((e) => {
+  document.getElementById('o').textContent = 'THREW: ' + (e && e.stack || e);
+});
+</script>

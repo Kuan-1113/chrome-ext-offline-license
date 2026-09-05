@@ -1,0 +1,48 @@
+# ─────────────────────────────────────────────────────────────
+#  NEVER COMMIT SIGNING KEYS.
+#
+#  If your private key leaks, anyone can mint valid licenses for
+#  your extension — and because verification is offline, you have
+#  no way to revoke them. There is no recovery from this.
+#
+#  Keep the private key outside the repo entirely (a password
+#  manager plus offline media). These rules are a seatbelt, not
+#  a substitute for that.
+# ─────────────────────────────────────────────────────────────
+*private*
+*PRIVATE*
+*.pem
+*.p8
+*.p12
+*.key
+keys-*.csv
+licenses-*.csv
+*SECRET*
+*secret*
+.env
+.env.*
+
+# Real deployment config (the template in this repo is safe; a
+# filled-in copy is not — it carries your webhook secret and
+# spreadsheet IDs).
+*-READY.gs
+*-ready.gs
+
+# Editors / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node (only if you add tooling later)
+node_modules/
+
+# test artefacts (contain real keys)
+tools/keys/
+tools/_testdata.js
