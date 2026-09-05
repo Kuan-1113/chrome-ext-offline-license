@@ -1,0 +1,7 @@
+# linguist 預設把 example/ 當文件、不計入語言統計,結果這個 repo 被標成 Python
+# (只剩 src/license.js 4.5KB 對上 tools/keygen.py 5.1KB)。
+# example/ 是可以載入執行的完整擴充,不是說明文件 —— 讓它算進去。
+example/** linguist-documentation=false
+
+# 換行統一,避免 Windows 上 clone 出來全是 CRLF
+* text=auto eol=lf
